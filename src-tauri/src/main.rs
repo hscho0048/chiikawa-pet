@@ -22,7 +22,7 @@ struct Frame {
 /// Move the pet window (x, y = top-left in logical px), toggle click-through and report
 /// where the cursor and the usable screen area are. One round trip per animation frame.
 #[tauri::command]
-fn frame(window: WebviewWindow, x: f64, y: f64, through: bool, raise: bool) -> Frame {
+fn frame(window: WebviewWindow, x: Option<f64>, y: Option<f64>, through: bool, raise: bool) -> Frame {
     let monitor = window
         .current_monitor()
         .ok()
@@ -37,7 +37,9 @@ fn frame(window: WebviewWindow, x: f64, y: f64, through: bool, raise: bool) -> F
         }
         None => (1.0, (0.0, 0.0, 1280.0, 800.0)),
     };
-    let _ = window.set_position(PhysicalPosition::new((x * scale).round() as i32, (y * scale).round() as i32));
+    if let (Some(x), Some(y)) = (x, y) {
+        let _ = window.set_position(PhysicalPosition::new((x * scale).round() as i32, (y * scale).round() as i32));
+    }
     let _ = window.set_ignore_cursor_events(through);
     if raise {
         // other "topmost" windows (taskbar, overlays) can end up above us; re-assert our place
@@ -54,10 +56,23 @@ fn quit(app: AppHandle) {
 
 fn spawn_pet(app: &AppHandle) -> tauri::Result<WebviewWindow> {
     let n = PET_COUNT.fetch_add(1, Ordering::Relaxed);
+    // start fully on screen: macOS pauses rendering of off-screen (occluded) webviews,
+    // which would stop the animation loop that is supposed to move the window into view
+    let (px, py) = match app.primary_monitor().ok().flatten() {
+        Some(m) => {
+            let s = m.scale_factor();
+            let wa = m.work_area();
+            (
+                (wa.position.x as f64 + wa.size.width as f64 / 2.0) / s - BOX / 2.0,
+                wa.position.y as f64 / s + 120.0,
+            )
+        }
+        None => (200.0, 200.0),
+    };
     let builder = WebviewWindowBuilder::new(app, format!("pet-{n}"), WebviewUrl::App("index.html".into()))
         .title("Chiikawa")
         .inner_size(BOX, BOX)
-        .position(-1000.0, -1000.0)
+        .position(px, py)
         .resizable(false)
         .decorations(false)
         .transparent(true)

@@ -45,9 +45,12 @@
     },
   };
 
-  invoke('frame', { x: -1000, y: -1000, through: true, raise: false }).then((f) => {
+  invoke('frame', { x: null, y: null, through: false, raise: true }).then((f) => {
     area = { left: f.area[0], top: f.area[1], right: f.area[2], bottom: f.area[3] };
-    ChiikawaPet.run(stage);
+    ChiikawaPet.run(stage, { y: area.top + BOX + 120 });
+  }).catch((err) => {
+    console.error('frame failed', err);
+    ChiikawaPet.run(stage, { y: area.top + BOX + 120 });
   });
 </script>
 </body>

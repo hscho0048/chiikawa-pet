@@ -637,19 +637,21 @@
 
   function run(stage, opts) {
     const pets = [];
-    let last = now();
-    const loop = () => {
+    let last = now(), rafAt = 0;
+    const step = () => {
       const t = now();
       const dt = Math.min(0.05, (t - last) / 1000);
       last = t;
       stage.beforeFrame?.(pets);
       for (const p of pets) p.tick(dt);
       stage.afterFrame?.(pets);
-      requestAnimationFrame(loop);
     };
+    const loop = () => { rafAt = now(); step(); requestAnimationFrame(loop); };
     return preload().then(() => {
       pets.push(new Pet(stage, opts));
       requestAnimationFrame(loop);
+      // the webview may stop animation frames for a window it thinks is hidden; keep ticking anyway
+      setInterval(() => { if (now() - rafAt > 120) step(); }, 33);
       return { pets, add: (o) => { const p = new Pet(stage, o); pets.push(p); return p; } };
     });
   }
