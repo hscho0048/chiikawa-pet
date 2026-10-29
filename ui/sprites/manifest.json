@@ -1,0 +1,146 @@
+{
+ "walk_lollipop": {
+  "w": 191,
+  "h": 250,
+  "ms": 960,
+  "tags": [
+   "walk"
+  ]
+ },
+ "run_torch": {
+  "w": 277,
+  "h": 267,
+  "ms": 920,
+  "tags": [
+   "run"
+  ]
+ },
+ "spin": {
+  "w": 223,
+  "h": 226,
+  "ms": 2300,
+  "tags": [
+   "turn",
+   "idle"
+  ]
+ },
+ "spin_peek": {
+  "w": 161,
+  "h": 174,
+  "ms": 1100,
+  "tags": [
+   "turn",
+   "idle"
+  ]
+ },
+ "dance_heart": {
+  "w": 210,
+  "h": 203,
+  "ms": 1400,
+  "tags": [
+   "happy",
+   "idle"
+  ]
+ },
+ "wiggle_doll": {
+  "w": 251,
+  "h": 203,
+  "ms": 1280,
+  "tags": [
+   "idle",
+   "pet"
+  ]
+ },
+ "flowers": {
+  "w": 269,
+  "h": 210,
+  "ms": 2800,
+  "tags": [
+   "happy",
+   "pet"
+  ]
+ },
+ "cheer": {
+  "w": 265,
+  "h": 205,
+  "ms": 1000,
+  "tags": [
+   "happy"
+  ]
+ },
+ "party": {
+  "w": 199,
+  "h": 200,
+  "ms": 1200,
+  "tags": [
+   "happy"
+  ]
+ },
+ "hat_toss": {
+  "w": 155,
+  "h": 172,
+  "ms": 1060,
+  "tags": [
+   "play"
+  ]
+ },
+ "sleepy": {
+  "w": 188,
+  "h": 236,
+  "ms": 1800,
+  "tags": [
+   "sleep"
+  ]
+ },
+ "squish": {
+  "w": 144,
+  "h": 149,
+  "ms": 960,
+  "tags": [
+   "drag",
+   "land"
+  ]
+ },
+ "blush_clover": {
+  "w": 242,
+  "h": 178,
+  "ms": 1000,
+  "tags": [
+   "idle",
+   "pet"
+  ]
+ },
+ "walk_bounce": {
+  "w": 253,
+  "h": 265,
+  "ms": 800,
+  "tags": [
+   "walk"
+  ]
+ },
+ "bounce_head": {
+  "w": 145,
+  "h": 144,
+  "ms": 1500,
+  "tags": [
+   "idle",
+   "happy"
+  ]
+ },
+ "sit_wiggle": {
+  "w": 135,
+  "h": 145,
+  "ms": 2790,
+  "tags": [
+   "idle"
+  ]
+ },
+ "eat_cookie": {
+  "w": 236,
+  "h": 243,
+  "ms": 1900,
+  "tags": [
+   "eat"
+  ]
+ }
+}

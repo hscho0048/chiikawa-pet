@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Chiikawa</title>
+<link rel="stylesheet" href="pet.css">
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+  .pet-box { transform: none !important; }
+</style>
+</head>
+<body>
+<script src="pet.js"></script>
+<script>
+  // Tauri stage: this window *is* the pet box; moving the pet means moving the window.
+  const invoke = window.__TAURI__.core.invoke;
+  const BOX = ChiikawaPet.BOX;
+  let area = { left: 0, top: 0, right: screen.availWidth, bottom: screen.availHeight };
+  let cursor = null;
+  let target = null, through = true, inflight = false, frames = 0;
+
+  function sync() {
+    if (inflight || !target) return;
+    inflight = true;
+    const raise = frames++ % 120 === 0;
+    invoke('frame', { x: target.x, y: target.y, through, raise }).then((f) => {
+      area = { left: f.area[0], top: f.area[1], right: f.area[2], bottom: f.area[3] };
+      cursor = { x: f.cursor[0], y: f.cursor[1] };
+    }).finally(() => { inflight = false; });
+  }
+
+  const stage = {
+    mount: (el) => document.body.appendChild(el),
+    bounds: () => area,
+    place: (pet, x, y) => { target = { x: Math.round(x - BOX / 2), y: Math.round(y - BOX) }; },
+    cursor: () => cursor,
+    // pointer in screen space so dragging keeps working while the window moves under it
+    pointer: (e) => ({ x: e.screenX, y: e.screenY }),
+    quit: () => invoke('quit'),
+    afterFrame: (pets) => {
+      const p = pets[0];
+      // let clicks fall through the transparent parts of the window
+      through = !(p.hovered || p.dragging || p.menuOpen);
+      sync();
+    },
+  };
+
+  invoke('frame', { x: -1000, y: -1000, through: true, raise: false }).then((f) => {
+    area = { left: f.area[0], top: f.area[1], right: f.area[2], bottom: f.area[3] };
+    ChiikawaPet.run(stage);
+  });
+</script>
+</body>
+</html>

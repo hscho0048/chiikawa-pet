@@ -1,0 +1,104 @@
+.pet-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+}
+
+.pet-box .body {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 50% 100%;
+}
+
+.pet-box .rig {
+  position: absolute;
+  left: -100px;
+  bottom: 0;
+  width: 200px;
+  pointer-events: auto;
+  cursor: grab;
+}
+
+.pet-box .rig:active { cursor: grabbing; }
+
+.pet-box img {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  transition: opacity 90ms linear;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.pet-box .fx { position: absolute; inset: 0; overflow: visible; }
+
+.pet-box .p {
+  position: absolute;
+  font-weight: 700;
+  text-shadow: 0 1px 0 #fff, 0 0 3px #fff;
+  will-change: transform, opacity;
+}
+
+.pet-box .bubble {
+  position: absolute;
+  left: 50%;
+  bottom: 120px;
+  padding: 3px 10px;
+  border: 2px solid #4a3b3b;
+  border-radius: 14px;
+  background: #fff;
+  color: #4a3b3b;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
+.pet-box .bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 9px;
+  height: 9px;
+  margin-left: -5px;
+  background: #fff;
+  border-right: 2px solid #4a3b3b;
+  border-bottom: 2px solid #4a3b3b;
+  transform: rotate(45deg);
+}
+
+.pet-box .menu {
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  min-width: 124px;
+  padding: 4px;
+  border: 2px solid #4a3b3b;
+  border-radius: 12px;
+  background: #fffaf7;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  pointer-events: auto;
+}
+
+.pet-box .menu.open { display: flex; }
+
+.pet-box .menu button {
+  all: unset;
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: #4a3b3b;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.pet-box .menu button:hover { background: #ffe1ea; }

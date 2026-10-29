@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chiikawa Pet Preview</title>
+<link rel="stylesheet" href="pet.css">
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #8fb8de; font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif; }
+  #desk { position: absolute; inset: 0; background: linear-gradient(160deg, #a9cbe9 0%, #cfe3f2 55%, #f6dfe6 100%); overflow: hidden; }
+  .win { position: absolute; background: #fff; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.18); }
+  .win::before { content: ""; display: block; height: 28px; border-radius: 8px 8px 0 0; background: #eef1f5; }
+  #taskbar { position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: rgba(30,34,44,.82); backdrop-filter: blur(8px); }
+  #panel { position: absolute; top: 12px; left: 12px; z-index: 10; max-width: calc(100% - 24px); padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.92); box-shadow: 0 4px 16px rgba(0,0,0,.12); font-size: 13px; color: #333; }
+  #panel b { display: block; margin-bottom: 6px; }
+  #panel .row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  #panel button { padding: 3px 8px; border: 1px solid #ddd; border-radius: 8px; background: #fff; font-size: 12px; cursor: pointer; }
+  #panel button:hover { background: #ffe8ef; }
+  #now { color: #c2557a; font-weight: 700; }
+</style>
+</head>
+<body>
+<div id="desk">
+  <div class="win" style="left:12%; top:22%; width:420px; height:260px"></div>
+  <div class="win" style="left:48%; top:12%; width:360px; height:300px"></div>
+  <div id="taskbar"></div>
+</div>
+<div id="panel">
+  <b>치이카와 펫 미리보기 · 지금: <span id="now">-</span></b>
+  클릭 · 더블클릭 · 연타 · 드래그해서 던지기 · 마우스 올려두기 · 빠르게 휘젓기 · 우클릭 메뉴
+  <div class="row" id="acts"></div>
+  <div class="row" id="reacts"></div>
+</div>
+<script src="pet.js"></script>
+<script>
+  const desk = document.getElementById('desk');
+  const BOX = ChiikawaPet.BOX;
+  let cursor = null;
+  desk.addEventListener('pointermove', (e) => { cursor = { x: e.clientX, y: e.clientY }; });
+  desk.addEventListener('pointerleave', () => { cursor = null; });
+
+  let app;
+  const stage = {
+    mount: (el) => desk.appendChild(el),
+    bounds: () => ({ left: 0, top: 0, right: innerWidth, bottom: innerHeight - 44 }),
+    place: (pet, x, y) => { pet.el.style.transform = `translate(${Math.round(x - BOX / 2)}px, ${Math.round(y - BOX)}px)`; },
+    cursor: () => cursor,
+    pointer: (e) => ({ x: e.clientX, y: e.clientY }),
+  };
+
+  ChiikawaPet.run(stage, { onAct: (n) => { document.getElementById('now').textContent = n; } }).then((a) => {
+    app = a;
+    const pet = a.pets[0];
+    const mk = (box, label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; box.appendChild(b); };
+    const acts = { 걷기: 'walk', 둘러보기: 'look', 빙글: 'spin', 간식: 'eat', 놀기: 'play', 춤: 'dance', 잠: 'sleep', '가장자리 엿보기': 'peek',
+      '커서 따라가기': 'follow', 콩콩뛰기: 'hopAround', 공중제비: 'leap', 굴러가기: 'roll', 어지러움: 'dizzy', 깜짝: 'scared', 화남: 'annoyed' };
+    for (const [k, v] of Object.entries(acts)) mk(document.getElementById('acts'), k, () => pet.force(v));
+    for (const k of Object.keys(ChiikawaPet.REACTIONS)) mk(document.getElementById('reacts'), '클릭:' + k, () => pet.force('react', { kind: k }));
+  });
+</script>
+</body>
+</html>

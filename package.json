@@ -1,0 +1,17 @@
+{
+  "name": "chiikawa-pet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chiikawa desktop pet for Windows and macOS (Tauri)",
+  "scripts": {
+    "sprites": "python tools/prepare_sprites.py",
+    "preview": "python -m http.server 5180 --directory ui",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "build:win": "tauri build --bundles nsis",
+    "build:mac": "tauri build --bundles app,dmg"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.4"
+  }
+}
